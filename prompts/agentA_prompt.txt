@@ -1,0 +1,237 @@
+# 1 Task
+
+You act as an economic-event annotator. The input is a JSON map where each key is an ID and each value contains a field "para_doc" holding an array of sentences. For every ID, treat the entire array (all its sentences concatenated in reading order) as one paragraph and produce one JSON object that lists every event mention found in that combined text following the official guidelines below.
+
+If a paragraph (i.e. a full para_doc array) contains no events, you must output exactly:
+
+{
+"event_mentions": []
+}
+
+Output objects in the same order as the IDs appear.
+
+---
+
+# 2  Mandatory JSON structure
+
+Your output must be a JSON array, where each element corresponds to one input ID. Each element must be an object with that ID as key and its "event_mentions" array as value.
+
+Example:
+
+
+[
+  {
+    "taichinhnganhang_0": {
+      "event_mentions": [...]
+    }
+  },
+  {
+    "taichinhnganhang_1": {
+      "event_mentions": [...]
+    }
+  }
+]
+
+
+Every element in this array is an event mention with the fields shown below. Use only these keys:
+
+Field definitions:
+
+- id: A unique string you invent (e.g. "e1", "e2"). It allows other events to point to this one in coreferent_event_triggers.
+
+- event_type: One of the 18 main types listed in Section 4.
+
+- event_subtype: A legal subtype for that event_type, or null when none exists.
+
+- trigger: An object with:
+• text: the minimal span that signals the event.
+• is_discontiguous: true if the trigger is split across non‑adjacent words, otherwise false.
+• extra_trigger_spans: the other pieces when is_discontiguous is true, otherwise an empty array.
+
+- factuality: An object with:
+• modality: Certain (affirmed) or Other (planned, hypothetical, etc.).
+• polarity: Positive (the event occurred / will occur) or Negative (it was cancelled, denied, or did not occur).
+
+- arguments: An array of argument objects. Each has:
+• text: the exact span in the paragraph.
+• role: a role name valid for this event type / subtype (see Section 4).
+• argument_type: Participant (central actor/value) or FILLER (context such as TIME, PLACE, Allegation, Title, etc.).
+• canonical_coreference: the full proper name only if text is a pronoun; otherwise an empty string.
+
+- coreferent_event_triggers: An array of IDs of other events that refer to the same real-world occurrence. Leave [] if no such link exists.
+
+Important:
+
+• Produce valid JSON (no trailing commas) and return it without markdown fences.
+• Do not add any keys that are not defined above.
+• Argument order does not matter. Spans must match the input text exactly.
+
+---
+
+# 3 Event coreference rules ("coreferent_event_triggers")
+
+Add an event‑ID to another event’s `coreferent_event_triggers`.The criteria for linking coreferent event mentions: 
+
+1. Semantically and intuitively refer to the same real‑world event.
+2. event_type and event_subtype are identical. Exception: one mention may lack a subtype (null) when it is specified later; matching is still allowed if the main type is the same.
+3. Temporal and location scope are identical, but the surface expressions can differ. Time/place phrases only need to correspond in scope.
+4. Arguments do not have to be identical, but should roughly refer to the same entities; some may be implied, specified, or generalised.
+5. The trigger words themselves need not be the same.
+6. Factuality need not match.
+
+Note: Mentions that share type, subtype, and matching time/place are not automatically coreferent; link them only when context shows they describe the same occurrence.
+If no other mention meets these criteria, leave `coreferent_event_triggers` as an empty array (`[]`).
+
+---
+
+# 4  EVENT TYPES, SUBTYPES & ARGUMENT ROLES
+
+1. CSR/Brand
+    - Subtype: None
+    - Description: Company initiatives in branding or social responsibility.
+    - Participant roles: Company
+2. Deal
+    - Subtype: None
+    - Description: Business agreements or partnerships.
+    - Participant roles: Partner, Goal
+3. Dividend
+    - Subtypes: Payment, YieldRaise, YieldReduction, YieldStable
+    - Description: Company distribution of profit to shareholders.
+    - Participant roles: Company, Amount, YieldRatio, HistoricalYieldRatio 
+4. Employment
+    - Subtypes: Start, End, Compensation
+    - Description: Changes in employment status.
+    - Participant roles:
+      - Common: Employer, Employee
+      - Start: Replacing
+      - End: Replacer
+      - Compensation: Amount
+    - FILLER roles: Title
+5. Expense
+    - Subtypes: Increase, Decrease, Stable
+    - Description: Company expenditures.
+    - Participant roles: Company, Amount, HistoricalAmount
+6. Facility
+    - Subtypes: Open, Close
+    - Description: Company opening or closing physical infrastructure.
+    - Participant roles: Company, Facility
+7. FinancialReport
+    - Subtypes: Beat, Miss, Stable
+    - Description: Earnings or performance results.
+    - Participant roles: Company, Result
+8. Financing
+    - Subtype: None
+    - Description: Raising or receiving capital.
+    - Participant roles: Financee, Financer, Amount
+9. Investment
+    - Subtype: None
+    - Description: A company investing in other assets, firms, or ventures.
+    - Participant roles: Investor, Investee, Return, CapitalInvested
+10. Legal
+    - Subtypes: Proceeding, Conviction/Settlement, Acquit, Appeal
+    - Description: Lawsuits and legal processes.
+    - Participant roles: Plaintiff, Defendant, Complainant (for Proceeding/Appeal), Adjudicator
+    - FILLER roles: Allegation, Sentence
+11. Macroeconomics
+    - Subtype: None
+    - Description: National/global economic shifts affecting sectors or firms.
+    - Participant roles: AffectedCompany, Sector
+12. Merger/Acquisition
+    - Subtype: None
+    - Description: Acquisition or merger of companies.
+    - Participant roles: Acquirer, Target, Cost
+13. Product/Service
+    - Subtypes: Launch, Cancellation/Recall, Trial
+    - Description: Lifecycle events related to products or services.
+    - Participant roles: ProductService, Producer, Trialer (for Trial subtype)
+14. Profit/Loss
+    - Subtypes: Increase, Decrease, Stable
+    - Description: Company financial outcome.
+    - Participant roles: Profiteer, Amount, HistoricalAmount
+15. Rating
+    - Subtypes: BuyOutperform, SellUnderperform, Hold, Upgrade, Downgrade, Maintain, PriceTarget, Credit/Debt
+    - Description: Analyst or agency evaluations of securities.
+    - Participant roles: Security, Analyst, HistoricalRating (for Upgrade/Downgrade/Maintain), TargetPrice (for PriceTarget)
+16. Revenue
+    - Subtypes: Increase, Decrease, Stable
+    - Description: Revenue reporting.
+    - Participant roles: Company, Amount, HistoricalAmount, IncreaseAmount (for Increase subtype) and DecreaseAmount (for Decrease subtype)
+17. SalesVolume
+    - Subtypes: Increase, Decrease, Stable
+    - Description: Change in units sold or services delivered.
+    - Participant roles: GoodsService, Seller, Buyer, Amount, HistoricalAmount
+18. SecurityValue
+    - Subtypes: Increase, Decrease, Stable
+    - Description: Events describing the value/price or change in value/price of a share, stock, derivative or any tradable financial asset
+    - Participant roles: Security, Price, HistoricalPrice, IncreaseAmount (Increase), DecreaseAmount (Decrease)
+
+FILLER roles quick reference:
+  • TIME – explicit date / period (“June 2025”, “yesterday”)
+  • PLACE – geographic location (“Shanghai”, “Wall Street”)
+  • CAPITAL – money / tradable asset amount (“$5 bn”, “30 000 shares”)
+  • ALLEGATION – offence alleged in a Legal action
+  • SENTENCE – punishment / settlement after Legal conviction/settlement
+  • TITLE – job position of an Employment.Employee
+
+
+---
+
+# 5 Example
+
+Below is a **sample input map** containing a single ID.  In real use, the map can hold many IDs (`taichinhnganhang_0`, `taichinhnganhang_1`, …); each key is processed independently.
+
+```json
+[
+  "taichinhnganhang_0": {
+    "para_doc": [
+      "Ngày 26/11/2024, Công ty ABC chính thức khai trương trung tâm dữ liệu mới tại Đà Nẵng.",
+      "Việc khánh thành này đánh dấu bước ngoặt mở rộng hạ tầng của doanh nghiệp."
+    ]
+  }
+]
+```
+
+**Expected output for that ID**
+
+[{
+  "taichinhnganhang_0": {
+    "event_mentions": [
+      {
+        "id": "e1",
+        "event_type": "Facility",
+        "event_subtype": "Open",
+        "trigger": {
+          "text": "khai trương",
+          "is_discontiguous": false,
+          "extra_trigger_spans": []
+        },
+        "factuality": { "modality": "Certain", "polarity": "Positive" },
+        "arguments": [
+          { "text": "Công ty ABC", "role": "Company", "argument_type": "Participant", "canonical_coreference": "" },
+          { "text": "trung tâm dữ liệu mới", "role": "Facility", "argument_type": "Participant", "canonical_coreference": "" },
+          { "text": "Ngày 26/11/2024", "role": "TIME", "argument_type": "FILLER", "canonical_coreference": "" },
+          { "text": "Đà Nẵng", "role": "PLACE", "argument_type": "FILLER", "canonical_coreference": "" }
+        ],
+        "coreferent_event_triggers": ["e2"]
+      },
+      {
+        "id": "e2",
+        "event_type": "Facility",
+        "event_subtype": "Open",
+        "trigger": {
+          "text": "khánh thành",
+          "is_discontiguous": false,
+          "extra_trigger_spans": []
+        },
+        "factuality": { "modality": "Certain", "polarity": "Positive" },
+        "arguments": [
+          { "text": "doanh nghiệp", "role": "Company", "argument_type": "Participant", "canonical_coreference": "Công ty ABC" }
+        ],
+        "coreferent_event_triggers": ["e1"]
+      }
+    ]
+  }
+}]
+
+REMEMBER: output **valid JSON only**, no extra keys, no trailing commas.
+Extract and annotate these:

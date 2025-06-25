@@ -1,0 +1,41 @@
+# Python virtual environment
+ds200/
+
+# Log files
+*.log
+processing.log
+agentA_processing.log
+agentB_processing.log
+
+# Checkpoints (optional - you might want to keep these)
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+.env
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+checkpoints/agentA/*
+checkpoints/agentB/*
+
+# Large data files (consider using Git LFS)
+data/processed/agentA/*.json
+data/processed/agentB/*.json
+data/processed/agentA/sorted/*
+data/processed/agentB/sorted/*
+data/raw/*
+data/raw_new/*
+logs/agentA/*
+logs/agentB/*

@@ -1,0 +1,3 @@
+python agentB_openai.py tokenized_data_1000.json
+
+python agentA_deepseek.py tokenized_data_1000.json
