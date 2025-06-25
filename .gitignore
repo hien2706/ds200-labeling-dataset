@@ -30,10 +30,7 @@ Thumbs.db
 checkpoints/agentA/*
 checkpoints/agentB/*
 
-data/processed/agentA/sorted/*
-data/processed/agentB/sorted/*
-data/raw/*
-data/raw_new/*
+data/*
 
 logs/agentA/*
 logs/agentB/*
