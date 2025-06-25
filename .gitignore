@@ -30,7 +30,6 @@ Thumbs.db
 checkpoints/agentA/*
 checkpoints/agentB/*
 
-# Large data files (consider using Git LFS)
 data/processed/agentA/*.json
 data/processed/agentB/*.json
 data/processed/agentA/sorted/*
