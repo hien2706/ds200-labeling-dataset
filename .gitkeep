@@ -1,17 +1,8 @@
-
-
-checkpoints/agentA/.gitkeep
-
-checkpoints/agentB/.gitkeep
-
-data/processed/agentA/sorted/.gitkeep
-
-data/processed/agentB/sorted/.gitkeep
-
-data/raw/.gitkeep
-
-data/raw_new/.gitkeep
-
-logs/agentA/.gitkeep
-
-logs/agentB/.gitkeep
+touch checkpoints/agentA/.gitkeep
+touch checkpoints/agentB/.gitkeep
+touch data/processed/agentA/sorted/.gitkeep
+touch data/processed/agentB/sorted/.gitkeep
+touch data/raw/.gitkeep
+touch data/raw_new/.gitkeep
+touch logs/agentA/.gitkeep
+touch logs/agentB/.gitkeep
