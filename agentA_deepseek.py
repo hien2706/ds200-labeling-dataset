@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 class DeepSeekProcessor:
     def __init__(self):
-        self.raw_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/data/raw")
+        self.raw_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/data/raw_new")
         self.output_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/data/processed/agentA")
         self.checkpoint_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/checkpoints/agentA")
         self.logs_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/logs/agentA")

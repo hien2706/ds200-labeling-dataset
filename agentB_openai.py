@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 class AgentBProcessor:
     def __init__(self, max_workers=None):
         self.agent_a_sorted_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/data/processed/agentA/sorted")
-        self.raw_data_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/data/raw")
+        self.raw_data_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/data/raw_new")
         self.output_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/data/processed/agentB")
         self.checkpoint_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/checkpoints/agentB")
         self.logs_dir = Path("/home/hien2706/school/nam3_hk2/ds200/labeling-dataset/logs/agentB")
