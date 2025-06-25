@@ -34,5 +34,3 @@ data/*
 
 logs/agentA/*
 logs/agentB/*
-
-!**/.gitkeep
