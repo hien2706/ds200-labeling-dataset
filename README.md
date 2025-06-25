@@ -60,5 +60,3 @@ python agentB_openai.py tokenized_data_5500.json
 There will be errors. Fix them the same way as Agent A.
 
 After that, run `sort_and_copy.py` with the correct file_path to put into final result.
-
-[1] https://github.com/hien2706/ds200-labeling-datas
