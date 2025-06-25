@@ -1,0 +1,17 @@
+
+
+checkpoints/agentA/.gitkeep
+
+checkpoints/agentB/.gitkeep
+
+data/processed/agentA/sorted/.gitkeep
+
+data/processed/agentB/sorted/.gitkeep
+
+data/raw/.gitkeep
+
+data/raw_new/.gitkeep
+
+logs/agentA/.gitkeep
+
+logs/agentB/.gitkeep

@@ -30,11 +30,12 @@ Thumbs.db
 checkpoints/agentA/*
 checkpoints/agentB/*
 
-data/processed/agentA/*.json
-data/processed/agentB/*.json
 data/processed/agentA/sorted/*
 data/processed/agentB/sorted/*
 data/raw/*
 data/raw_new/*
+
 logs/agentA/*
 logs/agentB/*
+
+!**/.gitkeep
