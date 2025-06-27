@@ -21,6 +21,15 @@ Your input object always has this exact shape:
 ✓ If an event is removed ⇒ delete its id from all lists  
 ✓ If a new event is added ⇒ id pattern "r<N>" unique in this paragraph  
 
+### 🔎 Trigger Selection Rules (apply to every event mention):
+When identifying the `trigger.text`, always choose the minimal, most informative span that directly signals the event. Specifically:
+
+1. **Remove auxiliary/modal verbs**: Do not include common Vietnamese auxiliary verbs (e.g., *đã, đang, sẽ, vừa, mới, không, có thể, cần, nên, muốn*) or negations. These should be reflected in `factuality`, not in the trigger span.  
+   ▪ *Example:* `"giá vàng không thay_đổi"` → `trigger.text = "thay_đổi"`
+
+2. **Prefer standalone event nouns over supportive verbs**: If a noun or noun phrase after the verb sufficiently expresses the event on its own, use that as the trigger and omit the preceding verb.  
+   ▪ *Example:* `"ra quyết_định khởi_tố bị_can"` → `trigger.text = "khởi_tố bị_can"`
+
 # 4 Self-check protocol
 Before replying, silently run through these steps in order:
 ① Parse the draft JSON

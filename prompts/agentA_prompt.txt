@@ -65,7 +65,11 @@ Important:
 • Produce valid JSON (no trailing commas) and return it without markdown fences.
 • Do not add any keys that are not defined above.
 • Argument order does not matter. Spans must match the input text exactly.
-
+• Note on trigger.text selection: When identifying the trigger.text, always choose the minimal, most informative span that directly signals the event. Specifically:
+	1. Remove auxiliary/modal verbs: Do not include common Vietnamese auxiliary verbs (e.g., đã, đang, sẽ, 	vừa,mới, không, có thể, cần, nên, muốn) or negations. These should be reflected in factuality, not in the trigger 	span.
+		- Example: "giá vàng không thay_đổi" → trigger.text = "thay_đổi"
+	2. Prefer standalone event nouns over supportive verbs: If a noun or noun phrase after the verb sufficiently 	expresses the event on its own, use that as the trigger and omit the preceding verb.
+		- Example: "ra quyết_định khởi_tố bị_can" → trigger.text = "khởi_tố bị_can"
 ---
 
 # 3 Event coreference rules ("coreferent_event_triggers")
